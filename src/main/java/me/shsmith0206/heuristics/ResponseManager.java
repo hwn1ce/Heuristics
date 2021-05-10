@@ -7,6 +7,7 @@ import me.shsmith0206.heuristics.config.QuestionsConfig;
 import me.shsmith0206.heuristics.swing.HeuristicsPanel;
 import me.shsmith0206.heuristics.swing.TextIcon;
 import me.shsmith0206.heuristics.util.JarUtil;
+import me.shsmith0206.heuristics.util.RandomUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,8 @@ public class ResponseManager {
 
         QuestionsConfig config = new QuestionsConfig();
         ConfigLoader loader = new ConfigLoader();
+        List<String> questions = config.getQuestions();
+
         try {
             loader.load(config, ResponseManager.class.getResourceAsStream("/questions.yml"));
         } catch (ConfigException e) {
@@ -38,15 +41,13 @@ public class ResponseManager {
             JLabel response0 = panel.getResponsePanel().getResponse0();
             JLabel response1 = panel.getResponsePanel().getResponse1();
 
-            BufferedImage image0 = imageList.get(ThreadLocalRandom.current().nextInt(imageList.size()));
-            BufferedImage image1 = imageList.get(ThreadLocalRandom.current().nextInt(imageList.size()));
+            BufferedImage image0 = imageList.get(RandomUtil.threadLocalInt(imageList.size()));
+            BufferedImage image1 = imageList.get(RandomUtil.threadLocalInt(imageList.size()));
             response0.setIcon(new ImageIcon(image0.getScaledInstance(response0.getWidth(), response0.getHeight(), Image.SCALE_SMOOTH)));
             response1.setIcon(new ImageIcon(image1.getScaledInstance(response0.getWidth(), response0.getHeight(), Image.SCALE_SMOOTH)));
 
-            panel.getQuestionPanel().getQuestion().setIcon(new TextIcon(
-                    panel.getQuestionPanel().getQuestion(),
-                    config.getQuestions().get(ThreadLocalRandom.current().nextInt(config.getQuestions().size()))
-            ));
+            JLabel question = panel.getQuestionPanel().getQuestion();
+            question.setIcon(new TextIcon(question, questions.get(RandomUtil.threadLocalInt(questions.size()))));
 
             try {
                 Thread.sleep(1000);
