@@ -26,6 +26,7 @@ public final class JarUtil {
     public static <E> List<E> getResources(Predicate<String> filter, Function<InputStream, E> capture) throws IOException, URISyntaxException {
         List<E> results = new ArrayList<>();
 
+        System.out.println("Scanning JAR...");
         JarFile jarFile;
         try {
             jarFile = getJarFile();
@@ -43,6 +44,7 @@ public final class JarUtil {
                 }
             }
         }
+        System.out.println("Scan complete. Found " + results.size() + " results");
         return results;
     }
 

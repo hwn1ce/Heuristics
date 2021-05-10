@@ -3,7 +3,9 @@ import java.util.*;
 
 public class Prompt {
     private String[] animalstmp = {"Monkey", "Beaver", "Bison", "Camel", "squirrel", "Hedge Hog", "Donkey", "Giraffe", "Hamster", "Dear", "Dog", "Polar Bear", "Kangaroo", "Cat", "Cow", "Rabbit", "Llama", "Lion", "Mouse", "Rhinoceros", "Hippopotamus", "Elephant", "Horse", "Sheep", "Tiger", "Pig", "Bat", "Fox", "Wolf", "Zebra"};
-    private String[] questions = {"When travelling at their fastest, which of the following two animals is faster?", "At their tallest, which of the following two animals is taller?", "At their heaviest, which of the following two animals weighs more?"};
+    private String[] questions = {"When travelling at their fastest, which of the following two animals is faster?",
+            "At their tallest, which of the following two animals is taller?",
+            "At their heaviest, which of the following two animals weighs more?"};
     private ArrayList<String> animals = new ArrayList<String>();
     private String postSurvey;
     private long responseTime;
