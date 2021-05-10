@@ -1,5 +1,6 @@
 package me.shsmith0206.heuristics;
 
+import me.shsmith0206.heuristics.config.QuestionsConfig;
 import me.shsmith0206.heuristics.swing.HeuristicsPanel;
 
 import javax.swing.*;

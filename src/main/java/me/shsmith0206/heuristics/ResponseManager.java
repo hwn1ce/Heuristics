@@ -1,5 +1,9 @@
 package me.shsmith0206.heuristics;
 
+import com.dfsek.tectonic.exception.ConfigException;
+import com.dfsek.tectonic.exception.LoadException;
+import com.dfsek.tectonic.loading.ConfigLoader;
+import me.shsmith0206.heuristics.config.QuestionsConfig;
 import me.shsmith0206.heuristics.swing.HeuristicsPanel;
 import me.shsmith0206.heuristics.swing.TextIcon;
 import me.shsmith0206.heuristics.util.JarUtil;
@@ -20,6 +24,15 @@ public class ResponseManager {
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
+
+        QuestionsConfig config = new QuestionsConfig();
+        ConfigLoader loader = new ConfigLoader();
+        try {
+            loader.load(config, ResponseManager.class.getResourceAsStream("/questions.yml"));
+        } catch (ConfigException e) {
+            throw new RuntimeException(e);
+        }
+
         for (int i = 0; i < rounds; i++) {
             System.out.println(i);
             JLabel response0 = panel.getResponsePanel().getResponse0();
@@ -29,6 +42,11 @@ public class ResponseManager {
             BufferedImage image1 = imageList.get(ThreadLocalRandom.current().nextInt(imageList.size()));
             response0.setIcon(new ImageIcon(image0.getScaledInstance(response0.getWidth(), response0.getHeight(), Image.SCALE_SMOOTH)));
             response1.setIcon(new ImageIcon(image1.getScaledInstance(response0.getWidth(), response0.getHeight(), Image.SCALE_SMOOTH)));
+
+            panel.getQuestionPanel().getQuestion().setIcon(new TextIcon(
+                    panel.getQuestionPanel().getQuestion(),
+                    config.getQuestions().get(ThreadLocalRandom.current().nextInt(config.getQuestions().size()))
+            ));
 
             try {
                 Thread.sleep(1000);
