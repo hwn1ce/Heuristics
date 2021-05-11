@@ -1,9 +1,9 @@
 package me.shsmith0206.heuristics;
 
 import com.dfsek.tectonic.exception.ConfigException;
-import com.dfsek.tectonic.exception.LoadException;
 import com.dfsek.tectonic.loading.ConfigLoader;
 import me.shsmith0206.heuristics.config.QuestionsConfig;
+import me.shsmith0206.heuristics.data.Response;
 import me.shsmith0206.heuristics.swing.HeuristicsPanel;
 import me.shsmith0206.heuristics.swing.TextIcon;
 import me.shsmith0206.heuristics.util.JarUtil;
@@ -11,14 +11,47 @@ import me.shsmith0206.heuristics.util.RandomUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ResponseManager {
-    public void begin(HeuristicsPanel panel, int rounds) {
+    private volatile Response option;
+    private volatile boolean status = false;
+    private volatile String response;
+
+    public synchronized void begin(HeuristicsPanel panel, int rounds) {
+        panel.getQuestionPanel().setHighlighted(false);
+        panel.registerKeyboardAction(e -> {
+            if (!status) return;
+            synchronized (this) {
+                this.option = Response.LEFT;
+                this.notifyAll();
+            }
+        }, KeyStroke.getKeyStroke('z'), JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        panel.registerKeyboardAction(e -> {
+            if (!status) return;
+            synchronized (this) {
+                this.option = Response.RIGHT;
+                this.notifyAll();
+            }
+        }, KeyStroke.getKeyStroke('m'), JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        panel.getQuestionPanel().getResponse().addActionListener((e) -> {
+            if (response != null) return;
+            synchronized (this) {
+                this.response = panel.getQuestionPanel().getResponse().getText();
+                panel.getQuestionPanel().setHighlighted(false);
+                panel.getQuestionPanel().getResponse().setText("");
+                this.notifyAll();
+            }
+        });
+
         List<BufferedImage> imageList;
         try {
             imageList = JarUtil.getResources(JarUtil.JPG_FILTER.and(path -> path.startsWith("images")), JarUtil.IMAGE_FUNCTION);
@@ -51,7 +84,18 @@ public class ResponseManager {
             question.setIcon(new TextIcon(question, questions.get(RandomUtil.threadLocalInt(questions.size()))));
 
             try {
-                Thread.sleep(1000);
+                status = true; // We're waiting now.
+                option = Response.NONE;
+                wait(5000);
+                status = false; // Done waiting.
+                System.out.println("Options: " + option);
+
+                if (option != Response.NONE) {
+                    response = null;
+                    panel.getQuestionPanel().setHighlighted(true);
+                    wait();
+                    System.out.println(response);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -2,6 +2,8 @@ package me.shsmith0206.heuristics.swing;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class ResponsePanel extends JPanel {
     private final JLabel response0;
