@@ -19,6 +19,7 @@ dependencies {
     implementation("com.dfsek:Tectonic:1.3.1")
     implementation("org.yaml:snakeyaml:1.27")
     implementation("commons-io:commons-io:2.8.0")
+    implementation("com.google.code.gson:gson:2.8.6")
 }
 
 val jar by tasks.getting(Jar::class) {

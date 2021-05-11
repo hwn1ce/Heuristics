@@ -14,8 +14,10 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -23,9 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public final class JarUtil {
-    public static <E> List<E> getResources(Predicate<String> filter, Function<InputStream, E> capture) throws IOException, URISyntaxException {
-        List<E> results = new ArrayList<>();
-
+    public static void getResources(Predicate<String> filter, BiConsumer<String, InputStream> capture) throws IOException, URISyntaxException {
         System.out.println("Scanning JAR...");
         JarFile jarFile;
         try {
@@ -40,12 +40,11 @@ public final class JarUtil {
             JarEntry entry = entries.nextElement();
             if (filter.test(entry.getName())) {
                 try (InputStream stream = jarFile.getInputStream(entry)) {
-                    results.add(capture.apply(stream));
+                    capture.accept(entry.getName(), stream);
                 }
             }
         }
-        System.out.println("Scan complete. Found " + results.size() + " results");
-        return results;
+        System.out.println("Scan complete.");
     }
 
     public static final Predicate<String> JPG_FILTER = name -> name.endsWith(".jpg");

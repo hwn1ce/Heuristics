@@ -1,15 +1,15 @@
 package me.shsmith0206.heuristics.data;
 
 public class HeuristicsEntry {
-    private final boolean completed;
+    private final String answer;
 
-    private final String response;
+    private final Response response;
 
-    private final boolean side;
+    private final Question question;
 
-    public HeuristicsEntry(boolean completed, String response, boolean side) {
-        this.completed = completed;
+    public HeuristicsEntry(String answer, Response response, Question question) {
+        this.answer = answer;
         this.response = response;
-        this.side = side;
+        this.question = question;
     }
 }
