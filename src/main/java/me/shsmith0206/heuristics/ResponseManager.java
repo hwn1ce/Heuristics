@@ -28,13 +28,14 @@ public class ResponseManager {
 
         QuestionsConfig config = new QuestionsConfig();
         ConfigLoader loader = new ConfigLoader();
-        List<String> questions = config.getQuestions();
 
         try {
             loader.load(config, ResponseManager.class.getResourceAsStream("/questions.yml"));
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
+
+        List<String> questions = config.getQuestions();
 
         for (int i = 0; i < rounds; i++) {
             System.out.println(i);

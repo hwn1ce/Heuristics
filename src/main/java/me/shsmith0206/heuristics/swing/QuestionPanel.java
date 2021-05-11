@@ -7,7 +7,7 @@ public class QuestionPanel extends JPanel {
     private final JLabel question;
     private final TextField response;
     public QuestionPanel() {
-        setLayout(new GridLayout(1, 2));
+        setLayout(new GridLayout(2, 1));
         this.question = new JLabel();
         this.response = new TextField();
         add(question);
